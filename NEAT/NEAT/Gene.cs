@@ -4,6 +4,7 @@ using System.Text;
 
 namespace NEAT.NEAT
 {
+    [Serializable]
     public class Gene
     {
         public int InnovationID { get; set; }

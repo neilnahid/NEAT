@@ -4,6 +4,7 @@ using System.Linq;
 using NEAT.ExtensionMethods;
 namespace NEAT.NEAT
 {
+    [Serializable]
     public class Genome
     {
         public int GenomeID { get; set; }
@@ -15,6 +16,18 @@ namespace NEAT.NEAT
         public double AdjustedFitness { get; set; }
         public double AmountToSpawn { get; set; }
         public int Species { get; set; }
+        public Genome(Genome genome)
+        {
+            Genome newGenome = (Genome)genome.MemberwiseClone();
+            foreach (var node in genome.NeuronGenes)
+            {
+                NeuronGenes.Add(new NeuronGene(node));
+            }
+            foreach (var conn in genome.ConnectionGenes)
+            {
+                ConnectionGenes.Add(new ConnectionGene(conn, this));
+            }
+        }
         public Genome(int genomeID, int numberOfInputs, int numberOfOutputs, Neat neat)
         {
             Neat = neat;
@@ -104,6 +117,30 @@ namespace NEAT.NEAT
             {
                 Console.WriteLine(conn.ToString());
             }
+        }
+        public bool Equals(Genome genome)
+        {
+            bool isEquals = false;
+            if (genome.ConnectionGenes.Count == ConnectionGenes.Count)
+            {
+                isEquals = true;
+                for (int i = 0; i < ConnectionGenes.Count; i++)
+                {
+                    if (!ConnectionGenes[i].Equals(genome.ConnectionGenes[i]))
+                        return false;
+                }
+            }
+            if (genome.NeuronGenes.Count == NeuronGenes.Count)
+            {
+                isEquals = true;
+                for (int i = 0; i < NeuronGenes.Count; i++)
+                {
+                    if (!NeuronGenes[i].Equals(genome.NeuronGenes[i]))
+                        return false;
+                }
+            }
+            isEquals = Fitness == genome.Fitness && AdjustedFitness == genome.AdjustedFitness && AmountToSpawn == genome.AmountToSpawn && Species == genome.Species && GenomeID == genome.GenomeID;
+            return isEquals;
         }
     }
 }

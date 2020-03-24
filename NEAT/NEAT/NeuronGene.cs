@@ -1,5 +1,8 @@
+using System;
+
 namespace NEAT.NEAT
 {
+    [Serializable]
     public class NeuronGene : Gene
     {
 

@@ -3,6 +3,7 @@ using System.Linq;
 
 namespace NEAT.NEAT
 {
+    [Serializable]
     public class ConnectionGene
     {
         public NeuronGene From { get; private set; }
@@ -32,7 +33,7 @@ namespace NEAT.NEAT
             Weight = conn.Weight;
             IsEnabled = conn.IsEnabled;
             IsRecurrent = conn.IsRecurrent;
-            InnovationID = InnovationID;
+            InnovationID = conn.InnovationID;
         }
         public override string ToString()
         {
@@ -46,5 +47,10 @@ namespace NEAT.NEAT
             str += String.Format("\n|__________________|\n", this.Weight);
             return str;
         }
+        public bool Equals(ConnectionGene c)
+        {
+            return From.Equals(c.From) && To.Equals(c.To) && Weight == c.Weight && IsEnabled == c.IsEnabled && IsRecurrent == c.IsRecurrent && InnovationID == c.InnovationID;
+        }
+
     }
 }

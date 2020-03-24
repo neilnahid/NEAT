@@ -16,8 +16,8 @@ namespace NEAT
             }
             Console.Clear();
             genome.Display();
-            neat.Genomes.Add(new NEAT.Genome())
-
+            neat.Genomes.Add(new NEAT.Genome(genome));
+            Console.WriteLine(neat.Genomes[0].Equals(neat.Genomes[1]));
         }
     }
 }
