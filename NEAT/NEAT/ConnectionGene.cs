@@ -17,7 +17,8 @@ namespace NEAT.NEAT
             IsEnabled = isEnabled;
             From = from;
             To = to;
-            InnovationID = innovationID == 0 ? Neat.LATEST_INNOVATION_NUMBER : innovationID;
+            Weight = Static.Random.NextDouble() * 2 - 1;
+            InnovationID = innovationID;
         }
         /// <summary>
         /// Copies the connectionGene and updates the values of references type variables to genome object
@@ -32,6 +33,18 @@ namespace NEAT.NEAT
             IsEnabled = conn.IsEnabled;
             IsRecurrent = conn.IsRecurrent;
             InnovationID = InnovationID;
+        }
+        public override string ToString()
+        {
+            string str = "";
+            str += String.Format("___________________");
+            str += String.Format("\n| InnovationID: {0}            |", this.InnovationID);
+            str += String.Format("\n| In: {0}            |", this.From.InnovationID);
+            str += String.Format("\n| Out: {0}           |", this.To.InnovationID);
+            str += String.Format("\n| Weight: {0}     |", Math.Round(this.Weight, 2));
+            str += String.Format("\n| Weight: {0}     |", Math.Round(this.Weight, 2));
+            str += String.Format("\n|__________________|\n", this.Weight);
+            return str;
         }
     }
 }

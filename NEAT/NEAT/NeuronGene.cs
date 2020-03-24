@@ -4,7 +4,7 @@ namespace NEAT.NEAT
     {
 
         public NeuronType NeuronType { get; set; }
-        public bool IsRecurrent { get; set; }
+        public bool IsRecurrent { get; set; } = false;
         public double ActivationResponse { get; set; }
         public double Y { get; set; }
         public double X { get; set; }
@@ -19,10 +19,10 @@ namespace NEAT.NEAT
         public NeuronGene(NeuronType nodeType, double x, double y, bool isRecurrent = false, int innovationID = -1)
         {
             NeuronType = nodeType;
-            InnovationID = innovationID == 0 ? Neat.LATEST_NODE_NUMBER++ : innovationID;
+            InnovationID = innovationID;
             Y = y;
             X = x;
-            IsRecurrent = IsRecurrent;
+            IsRecurrent = isRecurrent;
         }
         public NeuronGene(NeuronGene gene)
         {
@@ -33,9 +33,22 @@ namespace NEAT.NEAT
             Y = gene.Y;
             InnovationID = gene.InnovationID;
         }
+        public NeuronGene(int innovationID)
+        {
+            InnovationID = innovationID;
+        }
         public bool Equals(NeuronGene neuron)
         {
             return InnovationID == neuron.InnovationID;
+        }
+        public override string ToString()
+        {
+            string str = "";
+            str += "Innovation/NodeID: " + InnovationID;
+            str += "\nType: " + NeuronType.ToString();
+            str += "\nX: " + X;
+            str += "\nY: " + Y;
+            return str;
         }
     }
 }

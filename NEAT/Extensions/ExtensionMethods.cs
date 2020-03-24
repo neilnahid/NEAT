@@ -10,7 +10,9 @@ namespace NEAT.ExtensionMethods
         public static T PickRandomElement<T>(this IEnumerable<T> list)
         {
             if (list.Count() > 0)
-                return ((IList<T>)list)[Static.Random.Next(list.Count())];
+            {
+                return list.ToList()[Static.Random.Next(list.Count())];
+            }
             return default(T);
         }
     }
