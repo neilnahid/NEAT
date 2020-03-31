@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NEAT
+namespace NEAT.NEAT
 {
     public static class Static
     {
