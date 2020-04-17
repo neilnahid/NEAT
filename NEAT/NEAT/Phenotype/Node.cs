@@ -34,16 +34,25 @@ namespace NEAT.NEAT.Phenotype
         /// </summary>
         public void FeedForward()
         {
+            ApplySigmoid();
             Connections.ForEach(conn =>
             {
                 conn.ToNode.Value += conn.FromNode.Value * conn.Weight;
             });
         }
-        private double Sigmoid()
+        public void FeedInput(double val)
+        {
+            Value = val;
+        }
+        private double Sigmoid(double val)
         {
             // formula: e^x/e^x+1
 
-            return Math.Pow(Math.E, Value) / (Math.Pow(Math.E, Value) + 1);
+            return Math.Pow(Math.E, val) / (Math.Pow(Math.E, val) + 1);
+        }
+        private void ApplySigmoid()
+        {
+            Value = Sigmoid(Value);
         }
     }
 }

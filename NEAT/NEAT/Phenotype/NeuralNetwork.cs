@@ -29,6 +29,27 @@ namespace NEAT.NEAT.Phenotype
                 Nodes.Add(new Node(neuron));
             });
         }
+        public int Compute(double[] inputs)
+        {
+            FeedInputs(inputs);
+            FeedForward();
+            return default(int);
+        }
+        private void FeedInputs(double[] inputs)
+        {
+            var inputNodes = Nodes.Where(node => node.NodeType == NeuronType.Input).ToList();
+            for (int i = 0; i < inputNodes.Count; i++)
+            {
+                inputNodes[i].FeedInput(inputs[i]);
+            }
+        }
+        private void FeedForward()
+        {
+            foreach (var node in Nodes)
+            {
+                node.FeedForward();
+            }
+        }
         public override string ToString()
         {
             string str = null;
