@@ -21,6 +21,10 @@ namespace NEAT
             neat.Genomes.Add(new NEAT.Genome(genome));
             Console.WriteLine(neat.Genomes[0].Equals(neat.Genomes[1]));
             Console.WriteLine(new NeuralNetwork(neat.Genomes[0]).ToString());
+            var nn = new NeuralNetwork(neat.Genomes[0]);
+            double[] inputs = { new Random().NextDouble(),new Random().NextDouble(), new Random().NextDouble() };
+            var output = nn.Compute(inputs);
+            Console.WriteLine("Output is: " + output);
         }
     }
 }

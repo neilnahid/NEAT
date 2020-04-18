@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NEAT.NEAT.Phenotype
 {
-    class Connection
+    public class Connection
     {
         public double Weight { get; set; }
         public Node FromNode { get; set; }
@@ -15,6 +15,14 @@ namespace NEAT.NEAT.Phenotype
             Weight = connection.Weight;
             FromNode = neuralNetwork.Nodes.Where(node => node.Id == connection.From.InnovationID).First();
             ToNode = neuralNetwork.Nodes.Where(node => node.Id == connection.To.InnovationID).First();
+        }
+        public override string ToString()
+        {
+            string str = null;
+            str += "FromNodeID: " + FromNode.Id;
+            str += "\nToNodeID: " + ToNode.Id;
+            str += "\nWeight" + Weight;
+            return str;
         }
     }
 }

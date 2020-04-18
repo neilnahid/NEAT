@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NEAT.ExtensionMethods;
+using NEAT.NEAT.Phenotype;
+
 namespace NEAT.NEAT
 {
     [Serializable]
@@ -11,6 +13,7 @@ namespace NEAT.NEAT
         public List<NeuronGene> NeuronGenes { get; set; } = new List<NeuronGene>();
         public List<ConnectionGene> ConnectionGenes { get; set; } = new List<ConnectionGene>();
 
+        public NeuralNetwork NeuralNetwork { get; set; }
         public Neat Neat { get; set; }
         public double Fitness { get; set; }
         public double AdjustedFitness { get; set; }
@@ -141,6 +144,10 @@ namespace NEAT.NEAT
             }
             isEquals = Fitness == genome.Fitness && AdjustedFitness == genome.AdjustedFitness && AmountToSpawn == genome.AmountToSpawn && Species == genome.Species && GenomeID == genome.GenomeID;
             return isEquals;
+        }
+        public void InstantiateNeuralNetwork()
+        {
+            NeuralNetwork = new NeuralNetwork(this);
         }
     }
 }

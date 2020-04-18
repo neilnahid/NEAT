@@ -5,21 +5,32 @@ using System.Text;
 
 namespace NEAT.NEAT.Phenotype
 {
-    class NeuralNetwork
+    public class NeuralNetwork
     {
         public List<Node> Nodes { get; set; } = new List<Node>();
         public List<Connection> Connections { get; set; } = new List<Connection>();
+        public List<Node> OutputNodes { get; set; } = new List<Node>();
         public NeuralNetwork(Genome genome)
         {
             CreateNodes(genome);
             CreateConnections(genome);
+            ReferenceConnectionsToNodes();
+            OutputNodes = Nodes.Where(node => node.NodeType == NeuronType.Output).ToList();
             Nodes.Sort();
         }
         private void CreateConnections(Genome genome)
         {
             genome.ConnectionGenes.ForEach(conn =>
             {
-                Connections.Add(new Connection(conn, this));
+                if (conn.IsEnabled)
+                    Connections.Add(new Connection(conn, this));
+            });
+        }
+        private void ReferenceConnectionsToNodes()
+        {
+            Nodes.ForEach(node =>
+            {
+                node.ReferenceConnections(Connections.Where(conn => conn.FromNode == node).ToList());
             });
         }
         private void CreateNodes(Genome genome)
@@ -33,7 +44,8 @@ namespace NEAT.NEAT.Phenotype
         {
             FeedInputs(inputs);
             FeedForward();
-            return default(int);
+            NormaliseOutput();
+            return GetOutputIndex();
         }
         private void FeedInputs(double[] inputs)
         {
@@ -49,6 +61,18 @@ namespace NEAT.NEAT.Phenotype
             {
                 node.FeedForward();
             }
+        }
+        private void NormaliseOutput()
+        {
+            var sum = OutputNodes.Select(node => node.Value).Sum();
+            OutputNodes.ForEach(node =>
+            {
+                node.Value = Math.Round(node.Value / sum, 2);
+            });
+        }
+        public int GetOutputIndex()
+        {
+            return OutputNodes.IndexOf(OutputNodes.OrderByDescending(node => node.Value).First());
         }
         public override string ToString()
         {

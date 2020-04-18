@@ -1,25 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
 using NEAT.NEAT;
 namespace NEAT.NEAT.Phenotype
 {
-    class Node : IComparable<Node>
+    public class Node : IComparable<Node>
     {
         public int Id { get; set; }
         public double X { get; set; }//its X coordinate value in the genotype
         public double Value { get; set; }
         public NeuronType NodeType { get; set; }
+        private List<Connection> Connections { get; set; } //connections originated from this node
 
         public Node(NeuronGene neuron)
         {
+            Connections = new List<Connection>();
             Id = neuron.InnovationID;
             X = neuron.X;
             Value = 0;
             NodeType = neuron.NeuronType;
         }
-        public List<Connection> Connections { get; set; } //connections originated from this node
 
         public int CompareTo([AllowNull] Node other)
         {
@@ -53,6 +55,10 @@ namespace NEAT.NEAT.Phenotype
         private void ApplySigmoid()
         {
             Value = Sigmoid(Value);
+        }
+        public void ReferenceConnections(List<Connection> connections)
+        {
+            Connections.AddRange(connections);
         }
     }
 }
