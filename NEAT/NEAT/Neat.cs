@@ -14,9 +14,9 @@ namespace NEAT.NEAT
         public static double M_ADD_NODE_RATE = 0.03;
         public static double WEIGHT_RANDOM_STRENGTH = 0.03;
         public static double WEIGHT_SHIFT_RANDOM = 0.03;
-        public static double C1 = 0.05;
-        public static double C2 = 0.05;
-        public static double C3 = 0.05;
+        public static double C1 = 1;
+        public static double C2 = 1;
+        public static double C3 = 1;
 
         public ConnectionGene GetConnection(NeuronGene from, NeuronGene to)
         {
@@ -38,19 +38,20 @@ namespace NEAT.NEAT
             var inno = Innovations.Where(inno => inno.FromNeuron.Equals(from) && inno.ToNeuron.Equals(to)).FirstOrDefault();
             if (inno == null)
             {
-                inno = new Innovation(InnovationType.NEW_CONNECTION, from.InnovationID, to.InnovationID, Innovations.Count + 1);
+                inno = new Innovation(InnovationType.NEW_NODE, from.InnovationID, to.InnovationID, Innovations.Count + 1, NeuronType.Hidden);
                 Innovations.Add(inno);
             }
             return new NeuronGene(NeuronType.Hidden, (from.X + to.X) / 2, (from.Y + to.Y) / 2, innovationID: inno.InnovationID);
         }
         public NeuronGene GetNode(NeuronType type, double x, double y)
         {
-            Innovations.Add(new Innovation(InnovationType.NEW_NODE, innovationID: Innovations.Count + 1));
+            if (Innovations.Any(inno => inno.X == x && inno.Y == y && inno.NeuronType == type))
+            {
+                var inno = Innovations.Where(inno => inno.X == x && inno.Y == y && inno.NeuronType == type).First();
+                return new NeuronGene(type, x, y, innovationID: inno.InnovationID);
+            }
+            Innovations.Add(new Innovation(InnovationType.NEW_NODE, null, null, Innovations.Count + 1, type, x, y));
             return new NeuronGene(type, x, y, innovationID: Innovations.Count);
-        }
-        public NeuronGene GetNode()
-        {
-            return new NeuronGene(Innovations.Count + 1);
         }
         public double CompatibilityDistance(Genome genome1, Genome genome2)
         {
@@ -58,8 +59,8 @@ namespace NEAT.NEAT
             List<ConnectionGene> excessGenes = ExcessGenes(genome1, genome2);
             int N = genome1.GeneCount > genome2.GeneCount ? genome1.GeneCount : genome2.GeneCount;
             N = N < 20 ? 1 : N;
-            double excessFactor = C1 * excessGenes.Count / N;
-            double disjointFactor = C2 * disjointGenes.Count / N;
+            double excessFactor = (C1 * excessGenes.Count) / N;
+            double disjointFactor = (C2 * disjointGenes.Count) / N;
             double weightFactor = C3 * GetAverageWeightDifference(genome1, genome2);
             return excessFactor + disjointFactor + weightFactor;
         }
@@ -78,8 +79,8 @@ namespace NEAT.NEAT
             var lesserInnovationNumber = genome1.HighestInnovationNumber() < genome2.HighestInnovationNumber() ?
                                             genome1.HighestInnovationNumber() : genome2.HighestInnovationNumber();
             return lesserInnovationNumber == genome1.HighestInnovationNumber() ?
-                genome1.ConnectionGenes.Where(conn => conn.InnovationID > lesserInnovationNumber).ToList() :
-                genome2.ConnectionGenes.Where(conn => conn.InnovationID > lesserInnovationNumber).ToList();
+                genome2.ConnectionGenes.Where(conn => conn.InnovationID > lesserInnovationNumber).ToList() :
+                genome1.ConnectionGenes.Where(conn => conn.InnovationID > lesserInnovationNumber).ToList();
 
         }
         private List<int> MatchingGenesInnovationID(Genome genome1, Genome genome2)
@@ -102,7 +103,7 @@ namespace NEAT.NEAT
             {
                 double conn1Weight = genome1.ConnectionGenes.Find(conn => conn.InnovationID == innoID).Weight;
                 double conn2Weight = genome2.ConnectionGenes.Find(conn => conn.InnovationID == innoID).Weight;
-                averageWeightDiff = Math.Abs(conn1Weight - conn2Weight);
+                averageWeightDiff += Math.Abs(conn1Weight - conn2Weight);
             }
             return averageWeightDiff / matchingGenesID.Count;
         }

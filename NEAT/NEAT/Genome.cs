@@ -25,7 +25,12 @@ namespace NEAT.NEAT
 
         public Genome(Genome genome)
         {
-            Genome newGenome = (Genome)genome.MemberwiseClone();
+            Fitness = genome.Fitness;
+            Species = genome.Species;
+            AmountToSpawn = genome.AmountToSpawn;
+            AdjustedFitness = genome.AdjustedFitness;
+            GenomeID = genome.GenomeID;
+            Neat = genome.Neat;
             foreach (var node in genome.NeuronGenes)
             {
                 NeuronGenes.Add(new NeuronGene(node));
@@ -34,6 +39,7 @@ namespace NEAT.NEAT
             {
                 ConnectionGenes.Add(new ConnectionGene(conn, this));
             }
+            NeuralNetwork = new NeuralNetwork(this);
         }
         public Genome(int genomeID, int numberOfInputs, int numberOfOutputs, Neat neat)
         {

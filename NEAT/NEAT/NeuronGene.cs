@@ -36,10 +36,6 @@ namespace NEAT.NEAT
             Y = gene.Y;
             InnovationID = gene.InnovationID;
         }
-        public NeuronGene(int innovationID)
-        {
-            InnovationID = innovationID;
-        }
         public bool Equals(NeuronGene neuron)
         {
             return InnovationID == neuron.InnovationID;
