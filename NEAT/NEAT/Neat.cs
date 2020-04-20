@@ -14,6 +14,9 @@ namespace NEAT.NEAT
         public static double M_ADD_NODE_RATE = 0.03;
         public static double WEIGHT_RANDOM_STRENGTH = 0.03;
         public static double WEIGHT_SHIFT_RANDOM = 0.03;
+        public static double C1 = 0.05;
+        public static double C2 = 0.05;
+        public static double C3 = 0.05;
 
         public ConnectionGene GetConnection(NeuronGene from, NeuronGene to)
         {
@@ -48,6 +51,60 @@ namespace NEAT.NEAT
         public NeuronGene GetNode()
         {
             return new NeuronGene(Innovations.Count + 1);
+        }
+        public double CompatibilityDistance(Genome genome1, Genome genome2)
+        {
+            List<ConnectionGene> disjointGenes = DisjointGenes(genome1, genome2);
+            List<ConnectionGene> excessGenes = ExcessGenes(genome1, genome2);
+            int N = genome1.GeneCount > genome2.GeneCount ? genome1.GeneCount : genome2.GeneCount;
+            N = N < 20 ? 1 : N;
+            double excessFactor = C1 * excessGenes.Count / N;
+            double disjointFactor = C2 * disjointGenes.Count / N;
+            double weightFactor = C3 * GetAverageWeightDifference(genome1, genome2);
+            return excessFactor + disjointFactor + weightFactor;
+        }
+        private List<ConnectionGene> DisjointGenes(Genome genome1, Genome genome2)
+        {
+            var lesserInnovationNumber = genome1.HighestInnovationNumber() < genome2.HighestInnovationNumber() ?
+                                            genome1.HighestInnovationNumber() : genome2.HighestInnovationNumber();
+            return genome1.ConnectionGenes
+                .Where(conn => conn.InnovationID <= lesserInnovationNumber)
+                .Except(genome2.ConnectionGenes
+                            .Where(conn => conn.InnovationID <= lesserInnovationNumber))
+                            .ToList();
+        }
+        private List<ConnectionGene> ExcessGenes(Genome genome1, Genome genome2)
+        {
+            var lesserInnovationNumber = genome1.HighestInnovationNumber() < genome2.HighestInnovationNumber() ?
+                                            genome1.HighestInnovationNumber() : genome2.HighestInnovationNumber();
+            return lesserInnovationNumber == genome1.HighestInnovationNumber() ?
+                genome1.ConnectionGenes.Where(conn => conn.InnovationID > lesserInnovationNumber).ToList() :
+                genome2.ConnectionGenes.Where(conn => conn.InnovationID > lesserInnovationNumber).ToList();
+
+        }
+        private List<int> MatchingGenesInnovationID(Genome genome1, Genome genome2)
+        {
+            List<int> matchingGenesID = new List<int>();
+            foreach (var connection in genome1.ConnectionGenes)
+            {
+                if (genome2.ConnectionGenes.Any(conn => conn.InnovationID == connection.InnovationID))
+                {
+                    matchingGenesID.Add(connection.InnovationID);
+                }
+            }
+            return matchingGenesID;
+        }
+        private double GetAverageWeightDifference(Genome genome1, Genome genome2)
+        {
+            var matchingGenesID = MatchingGenesInnovationID(genome1, genome2);
+            double averageWeightDiff = 0;
+            foreach (var innoID in matchingGenesID)
+            {
+                double conn1Weight = genome1.ConnectionGenes.Find(conn => conn.InnovationID == innoID).Weight;
+                double conn2Weight = genome2.ConnectionGenes.Find(conn => conn.InnovationID == innoID).Weight;
+                averageWeightDiff = Math.Abs(conn1Weight - conn2Weight);
+            }
+            return averageWeightDiff / matchingGenesID.Count;
         }
     }
 }

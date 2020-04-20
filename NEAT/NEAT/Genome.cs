@@ -19,6 +19,10 @@ namespace NEAT.NEAT
         public double AdjustedFitness { get; set; }
         public double AmountToSpawn { get; set; }
         public int Species { get; set; }
+        public int GeneCount {
+            get { return NeuronGenes.Count + ConnectionGenes.Count; }
+        }
+
         public Genome(Genome genome)
         {
             Genome newGenome = (Genome)genome.MemberwiseClone();
@@ -148,6 +152,10 @@ namespace NEAT.NEAT
         public void InstantiateNeuralNetwork()
         {
             NeuralNetwork = new NeuralNetwork(this);
+        }
+        public int HighestInnovationNumber()
+        {
+            return ConnectionGenes.OrderByDescending(conn => conn.InnovationID).First().InnovationID;
         }
     }
 }
