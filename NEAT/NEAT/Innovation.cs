@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
-namespace NEAT.NEAT
+using NEAT.Genotype;
+namespace NEAT
 {
     public class Innovation
     {
@@ -13,7 +13,7 @@ namespace NEAT.NEAT
         public int? ToNeuron { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
-        public Innovation(InnovationType type, int? from = null, int? to = null, int innovationID = -1, NeuronType neuronType = NeuronType.None,double x = 0,double y = 0)
+        public Innovation(InnovationType type, int? from = null, int? to = null, int innovationID = -1, NeuronType neuronType = NeuronType.None, double x = 0, double y = 0)
         {
             InnovationID = innovationID;
             InnovationType = type;

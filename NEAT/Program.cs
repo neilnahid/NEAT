@@ -1,7 +1,6 @@
 ﻿using System;
 using NEAT;
-using NEAT.NEAT.Phenotype;
-using NEAT.NEAT;
+using NEAT.Genotype;
 namespace NEAT
 {
     class Program

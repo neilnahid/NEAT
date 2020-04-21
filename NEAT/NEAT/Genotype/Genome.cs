@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NEAT.ExtensionMethods;
-using NEAT.NEAT.Phenotype;
-
-namespace NEAT.NEAT
+using NEAT.Phenotype;
+namespace NEAT.Genotype
 {
     [Serializable]
     public class Genome

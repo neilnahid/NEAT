@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NEAT.NEAT
+namespace NEAT.Genotype
 {
     [Serializable]
     public class Gene

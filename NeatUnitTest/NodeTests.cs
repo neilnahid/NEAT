@@ -1,7 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NEAT.NEAT;
-using NEAT.NEAT.Phenotype;
-
+using NEAT.Phenotype;
+using NEAT.Genotype;
 namespace NeatUnitTest
 {
     [TestClass]

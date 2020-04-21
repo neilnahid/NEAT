@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace NEAT.NEAT
+namespace NEAT.Genotype
 {
     [Serializable]
     public class ConnectionGene

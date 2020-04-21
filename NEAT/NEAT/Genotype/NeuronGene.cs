@@ -1,6 +1,6 @@
 using System;
 
-namespace NEAT.NEAT
+namespace NEAT.Genotype
 {
     [Serializable]
     public class NeuronGene : Gene

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
-using NEAT.NEAT;
-namespace NEAT.NEAT.Phenotype
+using NEAT.Genotype;
+namespace NEAT.Phenotype
 {
     public class Node : IComparable<Node>
     {

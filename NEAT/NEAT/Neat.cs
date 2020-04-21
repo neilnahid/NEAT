@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-namespace NEAT.NEAT
+using NEAT.Genotype;
+using NEAT.Phenotype;
+namespace NEAT
 {
     public class Neat
     {
