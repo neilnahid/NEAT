@@ -9,15 +9,19 @@ namespace NEAT
         {
             Neat neat = new Neat();
             neat.Genomes.Add(new Genome(0, 3, 4, neat));
-            neat.Genomes.Add(new Genome(neat.Genomes[0]));
-            var genome = neat.Genomes[0];
-            var genome2 = neat.Genomes[1];
             for (int i = 0; i < 100; i++)
             {
-                genome.Mutate();
-                genome2.Mutate();
+                neat.Genomes.Add(new Genome(neat.Genomes[0]));
             }
-            var compDistance = neat.CompatibilityDistance(neat.Genomes[0], neat.Genomes[1]);
+            for (int i = 0; i < 100; i++)
+            {
+                foreach (var g in neat.Genomes)
+                {
+                    g.Mutate();
+                }
+            }
+            var compDistance = Neat.CompatibilityDistance(neat.Genomes[0], neat.Genomes[1]);
+            neat.AssignGenomesToSpecies();
             Console.WriteLine(compDistance);
         }
     }

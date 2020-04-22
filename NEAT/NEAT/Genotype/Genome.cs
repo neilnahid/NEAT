@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using NEAT.ExtensionMethods;
+using NEAT.NEAT;
 using NEAT.Phenotype;
 namespace NEAT.Genotype
 {
@@ -161,6 +163,18 @@ namespace NEAT.Genotype
         public int HighestInnovationNumber()
         {
             return ConnectionGenes.OrderByDescending(conn => conn.InnovationID).First().InnovationID;
+        }
+        public void CalculateAdjustedFitness(Species species)
+        {
+            double sh_value = 0;
+            foreach (var g in species.Population)
+            {
+                if (g != this)
+                {
+                    sh_value += Neat.CompatibilityDistance(this, g) >= Neat.COMPATIBLITY_THRESHOLD ? 1 : 0;
+                }
+            }
+            AdjustedFitness = Fitness / sh_value;
         }
     }
 }
